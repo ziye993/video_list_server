@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    overflow: auto;
+    position: fixed;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+</style>
+
+<body>
+  <video id="videoItem" width="640" height="360" controls volume="0.5">
+    <source src="http://192.168.0.104:80/296.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+</body>
+<script>
+  const timeoutDuration = 5000; // 超时时间，单位为毫秒
+  (() => {
+    document.body.style.opacity = 0;
+    // 获取上传一次打开日期和当前时间做对比，如果大于十分钟就需要密码，否则不需要密码
+    const Xmin = isUploadTimeOverTenMinutes();
+    console.log(Xmin);
+    if (Xmin)
+      inputPws();
+    else {
+      localStorage.setItem("uploadTime", Date.now());
+      document.body.style.opacity = 1;
+    }
+  })()
+
+  window.onload = function () {
+
+
+  }
+
+  function isUploadTimeOverTenMinutes() {
+    const uploadTime = localStorage.getItem('uploadTime');
+    if (uploadTime) {
+      const currentTime = Date.now();
+      const tenMinutesInMilliseconds = 10 * 60 * 1000;
+      return currentTime - parseInt(uploadTime) > tenMinutesInMilliseconds;
+    }
+    return true;
+  }
+
+  function inputPws() {
+    var pws = prompt("请输入密码");
+    if (pws == "9") {
+      var pwst = prompt("错误，请重新输入");
+      if (pwst == "6") {
+        alert("ok");
+        localStorage.setItem("uploadTime", Date.now());
+        document.body.style.opacity = 1;
+      } else {
+        window.close();
+      }
+    }
+  }
+
+  function refreshThumbnails() {
+    fetch('/refresh')
+      .then(response => response.text())
+      .then(data => {
+        alert(data);
+        location.reload();
+      })
+      .catch(error => {
+        alert('Error refreshing thumbnails: ' + error);
+      });
+  }
+
+  function isPC() {
+    const userAgentInfo = navigator.userAgent;
+    const Agents = ["Android", "iPhone",
+      "SymbianOS", "Windows Phone",
+      "iPad", "iPod"
+    ];
+    let flag = true;
+    for (let v = 0; v < Agents.length; v++) {
+      if (userAgentInfo.indexOf(Agents[v]) > 0) {
+        flag = false;
+        break;
+      }
+    }
+    return flag;
+  }
+  if (isPC()) {
+    const body = document.getElementById('body');
+    let isSpacePressed = false;
+
+    document.addEventListener('keydown', function (event) {
+      if (event.code === 'Space' && !isSpacePressed) {
+        isSpacePressed = true;
+        // 按下空格键执行的事件
+        body.style.opacity = 1;
+      }
+    });
+
+    document.addEventListener('keyup', function (event) {
+      if (event.code === 'Space' && isSpacePressed) {
+        isSpacePressed = false;
+        // 松开空格键执行的事件
+        body.style.opacity = 0;
+      }
+    });
+
+  }
+</script>
+
+</html>
