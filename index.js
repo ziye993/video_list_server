@@ -6,7 +6,7 @@ const ffmpeg = require('fluent-ffmpeg');
 const app = express();
 const os = require('os');
 const { getUploadEngine, readFileOrDirectory, exists, readJsonFile, writeJsonFile } = require('./filesUtils')
-const port = 80;
+const port = 3000;
 app.use(cors());
 
 async function tempPng(videoPath, thumbnailPath, callback) {
@@ -283,7 +283,7 @@ app.use((req, res, next) => {
 
   // 启动服务器
   app.listen(port, () => {
-    console.log(`ip ${ip} port ${port}`);
+    console.log(`port ${port}`);
   });
 
 })();
