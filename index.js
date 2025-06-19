@@ -85,21 +85,21 @@ async function tempPng(videoPath, thumbnailPath, callback) {
 
 }
 
-const tmpFolderPath = 'D:\\.windowsVideoTmpImage';
-const folderPath = 'D:\\.windowsVideo';
-const uploadImagePath = 'D:\\.windowsUploadImage'
-const videoListDataPath = "D:\\.windowsVideoTmpImage\\videoList.json";
+// const globalApi = 'http://www.ziye993.cn/videosource';
+
+const tmpFolderPath = '/mnt/backup/.windowsVideoTmpImage';
+const folderPath = '/mnt/backup/.windowsVideo';
+const uploadImagePath = '/mnt/backup/.windowsUploadImage'
+const videoListDataPath = "/mnt/backup/.windowsVideoTmpImage/videoList.json";
 
 // 存储引擎 // 根据上传文件类型 存储到不同的文件夹
 const upload = getUploadEngine(uploadImagePath, folderPath);
-// 静态文件服务
-app.use(express.static(path.join(__dirname, 'public')));
+
 //video文件夹代理
-app.use(express.static(folderPath));
+// app.use(express.static(folderPath));
 //缩略图代理
-app.use(express.static(tmpFolderPath));
+// app.use(express.static(tmpFolderPath));
 // 代理web
-app.use(express.static(path.join(__dirname, 'web/dist')));
 let isRefresh = false;
 
 //缓存视频列表
@@ -111,9 +111,7 @@ app.get('/', (req, res) => {
 
 // 获取视频列表数据（在缓存中）
 app.get('/getFileList', async (req, res) => {
-  console.log(`
-[send] ::  ${vodeoListData.length}  [time] :: ${new Date()}
-`)
+  console.log(`[send] ::  ${vodeoListData.length}  [time] :: ${new Date()}`)
   res.status(200).send({
     succss: true,
     data: vodeoListData,
