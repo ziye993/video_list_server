@@ -9,5 +9,8 @@
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "eslint-plugin-react": "^7.37.5",
     "iconv-lite": "^0.6.3"
+  },
+  "scripts": {
+    "start": "node index.js"
   }
 }
