@@ -8,43 +8,6 @@ const os = require('os');
 const { getUploadEngine, readFileOrDirectory, exists, readJsonFile, writeJsonFile } = require('./filesUtils')
 const port = 80;
 app.use(cors());
-async function getIPInfo() {
-  const interfaces = os.networkInterfaces();
-  const ipInfo = {};
-
-  // 遍历每个网络接口
-  for (const interfaceName in interfaces) {
-    const interfaceData = interfaces[interfaceName];
-    ipInfo[interfaceName] = [];
-
-    // 遍历每个接口的地址信息
-    for (const data of interfaceData) {
-      const { family, address, internal, cidr, netmask, mac } = data;
-
-      if (internal === false && family === 'IPv4') {
-        ipInfo[interfaceName].push({
-          family, address, internal, cidr, netmask, mac
-        });
-      }
-
-    }
-    !ipInfo[interfaceName].length && delete ipInfo[interfaceName];
-  }
-  let ip = '';
-  Object.keys(ipInfo).forEach(key => {
-    if (ip) return
-    for (let i = 0; i < ipInfo[key].length; i++) {
-      let ele = ipInfo[key][i];
-      if (ele.netmask === '255.255.255.0') {
-        ip = ele.address;
-      }
-    }
-  });
-  if (ip === '') {
-    return false
-  }
-  return ip;
-}
 
 async function tempPng(videoPath, thumbnailPath, callback) {
   // const videoPath = path.join(videoDir, videoFile);
@@ -295,15 +258,6 @@ app.use((req, res, next) => {
 
 
 (async () => {
-  const ip = await getIPInfo() || "localhost";
-  try {
-    const { ip: cahIp } = await readJsonFile('./web/dist/ip.json');
-    if (ip !== cahIp) {
-      await writeJsonFile('./web/dist/ip.json', { ip })
-    }
-  } catch (error) {
-
-  }
 
   // 获取数据写入缓存中
   const file = await readFileOrDirectory(videoListDataPath);
