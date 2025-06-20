@@ -250,39 +250,44 @@ app.get(baseApi + '/refList', async (req, res) => {
       success: 'success',
       data: vodeoListData,
     })
+  } else {
+    res.status(502).send({
+      success: 'false',
+      data: null,
+    })
   }
-})
+});
 
 
-  (async () => {
+(async () => {
 
-    // 获取数据写入缓存中
-    const file = await readFileOrDirectory(videoListDataPath);
-    if (file.type !== 'error') {
-      let list = [];
-      try {
-        const content = JSON.parse(file.content);
-        vodeoListData = content.list || [];
-      } catch (error) {
-        // res.send({
-        //   error: 'JSON_ERROR'
-        // });
-        console.log(error)
-      }
-
-      if (!list.length) {
-        const videoFileList = await readFileOrDirectory(folderPath);
-        if (videoFileList.type !== 'error') {
-          vodeoListData = videoFileList.list;
-        }
-      }
+  // 获取数据写入缓存中
+  const file = await readFileOrDirectory(videoListDataPath);
+  if (file.type !== 'error') {
+    let list = [];
+    try {
+      const content = JSON.parse(file.content);
+      vodeoListData = content.list || [];
+    } catch (error) {
+      // res.send({
+      //   error: 'JSON_ERROR'
+      // });
+      console.log(error)
     }
 
-    // 启动服务器
-    app.listen(port, () => {
-      console.log(`port ${port}`);
-    });
+    if (!list.length) {
+      const videoFileList = await readFileOrDirectory(folderPath);
+      if (videoFileList.type !== 'error') {
+        vodeoListData = videoFileList.list;
+      }
+    }
+  }
 
-  })();
+  // 启动服务器
+  app.listen(port, () => {
+    console.log(`port ${port}`);
+  });
+
+})();
 
 
