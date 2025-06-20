@@ -54,10 +54,10 @@ async function tempPng(videoPath, thumbnailPath, callback) {
 
 // const globalApi = 'http://www.ziye993.cn/videosource';
 
-const tmpFolderPath = '/data/backup/.windowsVideoTmpImage';
-const folderPath = '/data/backup/.windowsVideo';
-const uploadImagePath = '/data/backup/.windowsUploadImage'
-const videoListDataPath = "/data/backup/.windowsVideoTmpImage/videoList.json";
+const tmpFolderPath = '/data/.windowsVideoTmpImage';
+const folderPath = '/data/.windowsVideo';
+const uploadImagePath = '/data/.windowsUploadImage'
+const videoListDataPath = "/data/.windowsVideoTmpImage/videoList.json";
 
 // 存储引擎 // 根据上传文件类型 存储到不同的文件夹
 const upload = getUploadEngine(uploadImagePath, folderPath);
