@@ -8,11 +8,7 @@ const os = require('os');
 const { getUploadEngine, readFileOrDirectory, exists, readJsonFile, writeJsonFile } = require('./filesUtils')
 const port = 3000;
 app.use(cors());
-app.listen(port, () => {
-  console.log(`port ${port}`);
-});
 
-return
 async function tempPng(videoPath, thumbnailPath, callback) {
   // const videoPath = path.join(videoDir, videoFile);
   // const thumbnailPath = path.join(tmpImageDir, `${path.parse(videoFile).name}.png`);
@@ -72,12 +68,14 @@ let isRefresh = false;
 //缓存视频列表
 let vodeoListData = [];
 
-app.get('/', (req, res) => {
-  res.send({ success: true })
-})
+const baseApi = '/videolist'
+
+// app.get('/', (req, res) => {
+//   res.send({ success: true })
+// })
 
 // 获取视频列表数据（在缓存中）
-app.get('/getFileList', async (req, res) => {
+app.get(baseApi + '/getFileList', async (req, res) => {
   console.log(`[send] ::  ${vodeoListData.length}  [time] :: ${new Date()}`)
   res.status(200).send({
     succss: true,
@@ -85,7 +83,7 @@ app.get('/getFileList', async (req, res) => {
   })
 });
 
-app.get('/refreshBlock', async (req, res) => {
+app.get(baseApi + '/refreshBlock', async (req, res) => {
   if (isRefresh) {
     res.status(200).send('当前正在刷新了，稍后再试！');
     return;
@@ -134,12 +132,12 @@ app.get('/refreshBlock', async (req, res) => {
 })
 
 // 处理文件上传请求
-app.post('/upload', upload.single('file'), (req, res) => {
+app.post(baseApi + '/upload', upload.single('file'), (req, res) => {
   res.send('上传成功');
 });
 
 // 处理刷新请求
-app.get('/refreshAll', (req, res) => {
+app.get(baseApi + '/refreshAll', (req, res) => {
   if (isRefresh) {
     res.status(200).send('当前正在刷新了，稍后再试！');
     return;
@@ -231,7 +229,7 @@ app.get('/refreshAll', (req, res) => {
   });
 });
 
-app.get('/refList', async (req, res) => {
+app.get(baseApi + '/refList', async (req, res) => {
   const file = await readFileOrDirectory(videoListDataPath);
   if (file.type !== 'error') {
     let list = [];
@@ -256,45 +254,35 @@ app.get('/refList', async (req, res) => {
 })
 
 
-app.use((req, res, next) => {
-  res.status(404).send('未找到该页面');
-});
+  (async () => {
 
+    // 获取数据写入缓存中
+    const file = await readFileOrDirectory(videoListDataPath);
+    if (file.type !== 'error') {
+      let list = [];
+      try {
+        const content = JSON.parse(file.content);
+        vodeoListData = content.list || [];
+      } catch (error) {
+        // res.send({
+        //   error: 'JSON_ERROR'
+        // });
+        console.log(error)
+      }
 
-(async () => {
-
-  // 获取数据写入缓存中
-  const file = await readFileOrDirectory(videoListDataPath);
-  if (file.type !== 'error') {
-    let list = [];
-    try {
-      const content = JSON.parse(file.content);
-      vodeoListData = content.list || [];
-    } catch (error) {
-      // res.send({
-      //   error: 'JSON_ERROR'
-      // });
-      console.log(error)
-    }
-
-    if (!list.length) {
-      const videoFileList = await readFileOrDirectory(folderPath);
-      if (videoFileList.type !== 'error') {
-        vodeoListData = videoFileList.list;
+      if (!list.length) {
+        const videoFileList = await readFileOrDirectory(folderPath);
+        if (videoFileList.type !== 'error') {
+          vodeoListData = videoFileList.list;
+        }
       }
     }
-  }
 
-  // 启动服务器
-  app.listen(port, () => {
-    console.log(`port ${port}`);
-  });
+    // 启动服务器
+    app.listen(port, () => {
+      console.log(`port ${port}`);
+    });
 
-
-
-
-
-
-})();
+  })();
 
 
