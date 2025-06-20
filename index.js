@@ -6,7 +6,7 @@ const ffmpeg = require('fluent-ffmpeg');
 const app = express();
 const os = require('os');
 const { getUploadEngine, readFileOrDirectory, exists, readJsonFile, writeJsonFile } = require('./filesUtils')
-const port = 3000;
+const port = 80;
 app.use(cors());
 
 async function tempPng(videoPath, thumbnailPath, callback) {
@@ -68,11 +68,14 @@ let isRefresh = false;
 //缓存视频列表
 let vodeoListData = [];
 
-const baseApi = '/videolist'
+const baseApi = '/videolist/api'
 
-// app.get('/', (req, res) => {
-//   res.send({ success: true })
-// })
+app.get(baseApi + '/', (req, res) => {
+  res.send({
+    success: true,
+    message: '正在访问 videolist 服务'
+  })
+})
 
 // 获取视频列表数据（在缓存中）
 app.get(baseApi + '/getFileList', async (req, res) => {
