@@ -50,10 +50,10 @@ async function tempPng(videoPath, thumbnailPath, callback) {
 
 // const globalApi = 'http://www.ziye993.cn/videosource';
 
-const tmpFolderPath = '/mnt/backup/.windowsVideoTmpImage';
-const folderPath = '/mnt/backup/.windowsVideo';
-const uploadImagePath = '/mnt/backup/.windowsUploadImage'
-const videoListDataPath = "/mnt/backup/.windowsVideoTmpImage/videoList.json";
+const tmpFolderPath = '/backup/.windowsVideoTmpImage';
+const folderPath = '/backup/.windowsVideo';
+const uploadImagePath = '/backup/.windowsUploadImage'
+const videoListDataPath = "/backup/.windowsVideoTmpImage/videoList.json";
 
 // 存储引擎 // 根据上传文件类型 存储到不同的文件夹
 const upload = getUploadEngine(uploadImagePath, folderPath);
@@ -69,7 +69,7 @@ let isRefresh = false;
 let vodeoListData = [];
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'web/dist/index.html'));
+  res.send({ success: true })
 })
 
 // 获取视频列表数据（在缓存中）
