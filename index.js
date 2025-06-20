@@ -8,7 +8,11 @@ const os = require('os');
 const { getUploadEngine, readFileOrDirectory, exists, readJsonFile, writeJsonFile } = require('./filesUtils')
 const port = 3000;
 app.use(cors());
+app.listen(port, () => {
+  console.log(`port ${port}`);
+});
 
+return
 async function tempPng(videoPath, thumbnailPath, callback) {
   // const videoPath = path.join(videoDir, videoFile);
   // const thumbnailPath = path.join(tmpImageDir, `${path.parse(videoFile).name}.png`);
@@ -285,6 +289,11 @@ app.use((req, res, next) => {
   app.listen(port, () => {
     console.log(`port ${port}`);
   });
+
+
+
+
+
 
 })();
 
