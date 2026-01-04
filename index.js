@@ -8,6 +8,7 @@ const os = require('os');
 const { getUploadEngine, readFileOrDirectory, exists, readJsonFile, writeJsonFile } = require('./filesUtils')
 const port = 80;
 app.use(cors());
+const baseApi = '/videolist/api'
 
 async function tempPng(videoPath, thumbnailPath, callback) {
   // const videoPath = path.join(videoDir, videoFile);
@@ -67,8 +68,6 @@ let isRefresh = false;
 
 //缓存视频列表
 let vodeoListData = [];
-
-const baseApi = '/videolist/api'
 
 app.get(baseApi + '/', (req, res) => {
   res.send({
@@ -263,7 +262,6 @@ app.get(baseApi + '/refList', async (req, res) => {
 
 
 (async () => {
-
   // 获取数据写入缓存中
   const file = await readFileOrDirectory(videoListDataPath);
   if (file.type !== 'error') {
